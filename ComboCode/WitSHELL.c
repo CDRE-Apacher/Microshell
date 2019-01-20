@@ -11,6 +11,8 @@
 		char *p, *a;
  		char path[1024];
 		char host[200];	
+		char *args[50];
+		int mode=0;
 		
 #define NORM  "\x1B[0m"
 #define RED  "\x1B[31m"
@@ -21,29 +23,21 @@
 #define CYAN  "\x1B[36m"
 #define WHITE  "\x1B[37m"
 
-
-int main()
+int shell_loop()
 {
-	while(1)	
-	{
-	
-		getcwd(path, sizeof(path));
-		gethostname(host, sizeof(host));
-		printf("%s%s@%s",GREEN,getenv("USER"),host);
-		printf("%s%s%s",BLUE,path,NORM);
-		printf("$");
-		fgets(command, sizeof(command),stdin);	
-		if(strcmp(command,"exit\n")==0)	 
+	if(strcmp(command,"exit\n")==0)	 
 		{
 			exit(EXIT_SUCCESS);	
 		}
 		else if(strcmp(command,"help\n")==0)
 		{
-			printf("%s***************************************************\n",GREEN);
-			printf("%s** %sAutor: Witold Borowiak%s                        **\n",GREEN,CYAN,GREEN);
-			printf("%s***************************************************\n",GREEN);
-			printf("%s** Lista komend: exit, help, cp, touch, cd       **\n",GREEN);
-			printf("%s***************************************************\n",GREEN);
+			printf("%s*************************************************************\n",GREEN);
+			printf("%s** %sAutor: Witold Borowiak%s                                  **\n",GREEN,CYAN,GREEN);
+			printf("%s*************************************************************\n",GREEN);
+			printf("%s** %sLista komend: exit, help, cp, touch, cd,%s                **\n",GREEN,CYAN,GREEN);
+			printf("%s*************************************************************\n",GREEN);
+			printf("%s** %sscript(do wczytywania komend z pliku a nie z klawiatury)%s**\n",GREEN,CYAN,GREEN);
+			printf("%s*************************************************************\n",GREEN);
 			printf("%s\n",NORM);
 			
 		}
@@ -52,7 +46,6 @@ int main()
 				command[strlen(command)-1]='\0';
 				p=strtok(command, " ");
 				int i=0;
-				char *args[50];
 				while(p!=NULL)
 				{
 					args[i]=p;
@@ -89,7 +82,7 @@ int main()
  					}
  					else
  						{
- 							printf("%sBlad: %sNie zrodlowy nie istnieje%s\n",RED,YELLOW,NORM);
+ 							printf("%sBlad: %sPlik zrodlowy nie istnieje%s\n",RED,YELLOW,NORM);
 						}
  				}
 			}
@@ -133,6 +126,24 @@ int main()
 					
 				}
 			}
+			else if(strcmp(a,"script")==0)
+			{
+				if(args[1]==NULL)
+				{
+					printf("%sBlad: %sNie podano nazwy skryptu%s\n",RED,YELLOW,NORM);
+				}
+				else
+				{
+					if( access( args[1], F_OK ) != -1 ) {
+ 						mode=1;
+ 					}
+ 					else
+ 						{
+ 							printf("%sBlad: %sPlik skryptu nie istnieje%s\n",RED,YELLOW,NORM);
+						}
+				}
+				
+			}
 			else
 			{
 				printf("%sOperacja wykonana poza microshellem%s\n",MAGENTA,NORM);
@@ -145,7 +156,36 @@ int main()
 			}
 		
 		}
-				
+	return 0;
+}
+
+int main()
+{
+	while(1)	
+	{
+		getcwd(path, sizeof(path));
+		gethostname(host, sizeof(host));
+		if(mode==0)
+		{
+			printf("%s%s@%s",GREEN,getenv("USER"),host);
+			printf("%s%s%s",BLUE,path,NORM);
+			printf("$");
+			fgets(command, sizeof(command),stdin);	
+			shell_loop();
+		}
+		else if(mode==1)
+		{
+			FILE *source;
+			char temp;
+ 			source = fopen(args[1], "r");
+			while (fgets(command, sizeof(command), source))
+			{
+				shell_loop();
+			}
+			fclose(source);
+			mode=0;
+		}
+		
 	}
 
 	return EXIT_SUCCESS;
