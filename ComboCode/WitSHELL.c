@@ -29,7 +29,6 @@ int main()
 	
 		getcwd(path, sizeof(path));
 		gethostname(host, sizeof(host));
-		printf("\n");
 		printf("%s%s@%s",GREEN,getenv("USER"),host);
 		printf("%s%s%s",BLUE,path,NORM);
 		printf("$");
@@ -45,7 +44,7 @@ int main()
 			printf("%s***************************************************\n",GREEN);
 			printf("%s** Lista komend: exit, help, cp, touch, cd       **\n",GREEN);
 			printf("%s***************************************************\n",GREEN);
-			printf("%s",NORM);
+			printf("%s\n",NORM);
 			
 		}
 		else
@@ -67,7 +66,7 @@ int main()
 				FILE *source, *target;
 				if(args[1]==NULL)
 				{
-					printf("%sBlad: %sNie podano pliku zrodlowego%s",RED,YELLOW,NORM);
+					printf("%sBlad: %sNie podano pliku zrodlowego%s\n",RED,YELLOW,NORM);
 				}
 				else
 				{
@@ -75,7 +74,7 @@ int main()
  						source = fopen(args[1], "r");
 						if(args[2]==NULL)
 						{
-							printf("%sBlad: %sNie podano pliku docelowego%s",RED,YELLOW,NORM);
+							printf("%sBlad: %sNie podano pliku docelowego%s\n",RED,YELLOW,NORM);
 						}	
 						else
 						{
@@ -90,7 +89,7 @@ int main()
  					}
  					else
  						{
- 							printf("%sBlad: %sNie zrodlowy nie istnieje%s",RED,YELLOW,NORM);
+ 							printf("%sBlad: %sNie zrodlowy nie istnieje%s\n",RED,YELLOW,NORM);
 						}
  				}
 			}
@@ -98,7 +97,7 @@ int main()
 			{
 				if(args[1]==NULL)
 				{
-					printf("%sBlad: %sNie podano nazwy pliku%s",RED,YELLOW,NORM);
+					printf("%sBlad: %sNie podano nazwy pliku%s\n",RED,YELLOW,NORM);
 				}
 				else
 				{
@@ -129,14 +128,14 @@ int main()
 					}
 					else 
 					{
-						printf("%sBlad: %sKatalog nie istnieje%s",RED,YELLOW,NORM);
+						printf("%sBlad: %sKatalog nie istnieje%s\n",RED,YELLOW,NORM);
 					}
 					
 				}
 			}
 			else
 			{
-				printf("%sOperacja wykonana poza microshellem%s",MAGENTA,NORM);
+				printf("%sOperacja wykonana poza microshellem%s\n",MAGENTA,NORM);
 				pid = fork();
 				if(pid>0) wait(NULL);
 				if(pid==0)
