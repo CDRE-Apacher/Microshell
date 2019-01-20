@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -44,8 +43,9 @@ int main()
 			printf("%s***************************************************\n",GREEN);
 			printf("%s** Autor: Witold Borowiak                        **\n",GREEN);
 			printf("%s***************************************************\n",GREEN);
-			printf("%s** Lista komend: exit, help                      **\n",GREEN);
+			printf("%s** Lista komend: exit, help, cp a b ,            **\n",GREEN);
 			printf("%s***************************************************\n",GREEN);
+			printf("%s",NORM);
 			
 		}
 		else
@@ -71,21 +71,27 @@ int main()
 				}
 				else
 				{
- 					source = fopen(args[1], "r");
-					if(args[2]==NULL)
-					{
-						printf("Nie podano pliku docelowego");
-					}	
-					else
-					{
- 						target = fopen(args[2], "w");
- 						char ch;
-					 	while ((ch = fgetc(source)) != EOF){
-      						fputc(ch, target);
-      					}
-      					fclose(source);
-   						fclose(target);
+					if( access( args[1], F_OK ) != -1 ) {
+ 						source = fopen(args[1], "r");
+						if(args[2]==NULL)
+						{
+							printf("Nie podano pliku docelowego");
+						}	
+						else
+						{
+ 							target = fopen(args[2], "w");
+ 							char temp;
+					 		while ((temp = fgetc(source)) != EOF){
+      							fputc(temp, target);
+      						}
+      						fclose(source);
+   							fclose(target);
+ 						}
  					}
+ 					else
+ 						{
+ 							printf("Nie zrodlowy nie istnieje");
+						}
  				}
 			}
 			else
