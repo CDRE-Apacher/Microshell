@@ -24,8 +24,7 @@
 	static char host[256];	
 	static char username[64];
 
-	int operation_type = 0;
-	//THIS DETERMINES IF THE INPUT IS STDIN OR A SCRIPT FILE!!! /////////////
+	int p_id;
 
 ////////////// COPY THE USERNAME FROM ENVIRONMENTALS ////////////////
 void get_username(char * dest, int bufSize){
@@ -49,6 +48,7 @@ void print_help(){
 	printf("~cp <source file> <destination file> - copies the contesnts of the source file to the destination file.\n");
 	printf("~whoami - prints the currently logged in user.\n");
 	printf("~touch <file name> - creates a file of the specified name.\n");
+	printf("~remove <file name> - removes the specified file.");
 	printf("OTHER COMMANDS ARE SUPPORTED BUT EXECUTED OUTSIDE OF THIS MICROSHELL\n");
 	printf("*******************************************************\n%s", C_NRM);
 }
@@ -70,11 +70,6 @@ int main()
 		print_prompt(host, username, current_path);
 
 		fgets(cmd_line_input, sizeof(cmd_line_input),stdin);	
-
-
-
-		///////////////// ADD A SHELL_LOOP HERE /////////////////////////
-
 
 		///////////////// EXIT ////////////////////////////////////
 		if(strcmp(cmd_line_input,"exit\n")==0){
@@ -177,6 +172,7 @@ int main()
 				}
 			}
 		/////////////////////// END TOUCH /////////////////////////////
+
 		/////////////////////// REMOVE ////////////////////////////
 			else if(strcmp(a,"remove")==0){
 				if(args[1]==NULL) printf("%sError:%s File name not specified!", C_RED, C_NRM);
@@ -193,11 +189,21 @@ int main()
 		////////////////////// END REMOVE /////////////////////
 
 			else{// INCOMPASES ALL NON CUSTOM FUNCTIONS USING BUILT IN SYSTEM SHELL
-				if(fork()==0){
+				
+
+				/*if(fork()==0){
 					execvp(a, args);
 				}
 				else{
 					wait(NULL);
+				}*/
+
+				p_id = fork();
+				if(p_id>0) wait(NULL);
+				else if(p_id==0){
+					execvp(a, args);
+				}else if(p_id<0){
+					printf("%sErros:%s Fork() operation failed!", C_RED, C_NRM);
 				}
 			}
 		}
