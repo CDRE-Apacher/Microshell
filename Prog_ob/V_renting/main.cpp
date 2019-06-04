@@ -146,7 +146,7 @@ public:
 		doors = _doors;
 		trunk_cap = _trunk_cap;
 		
-		w_hull_type = w_hull_type;
+		w_hull_type = _w_hull_type;
 		hull_buoyancy = _hull_buoyancy;
 		
 		a_hull_type = _a_hull_type;
@@ -298,6 +298,54 @@ int main(){
 	new Customer("Witold", "Brzeski", 34);
 	new Customer("Damian", "Makowski", 36);
 	new Customer("Adrian", "Woltycki", 54);
+	
+	while(1){
+		
+		system("cls");
+		int com_input;
+		
+		cout
+		<<"0 -> Exit"<<endl
+		
+		<<"1 -> Add a vehicle"<<endl
+		<<"2 -> Add an employee"<<endl
+		<<"3 -> Add a client"<<endl
+		
+		<<"4 -> Rent a vehicle"<<endl
+		<<"5 -> Return a vehicle"<<endl
+		
+		<<"6 -> Revove an employee from the roster"<<endl
+		<<"7 -> Remove a vehicle from the roster"<<endl;
+		
+		cin>> com_input;
+		//if(com_input == 0) return EXIT_SUCCESS;
+		switch(com_input){
+			case 0:
+				return EXIT_SUCCESS;
+			break;
+		}
+		
+	}
+	
+	
+	
+	/*
+	
+	asd
+	
+	vector<Vehicle*> a = Vehicle::get_object_vector();
+		for(Vehicle* i : a){
+			cout<<i->to_string()<<endl;
+		}
+	
+	cout<<endl<<endl;
+	
+	vector<Person*> b = Person::get_object_vector();
+		for(Person* j : b){
+			cout<<j->to_string()<<endl;
+		}
+	*/
+	
 	/*
 	Vehicle::del_from_vector(3);
 	vector<Vehicle*> a = Vehicle::get_object_vector();
