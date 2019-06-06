@@ -5,11 +5,7 @@
 #include <set>
 #include <sstream>
 #include <cstdlib>
-#include <algorithm> //FOR SORTING VECTOR OBJECTS
-/* 	--NOTES--
-MAKE THE MENU LOOP
-MAKE ALL THE MANUAL FUNCTION CALLS
-*/
+#include <algorithm>
 using namespace std;
 
 /* --PERSON CLASSES-- */
@@ -203,7 +199,7 @@ public:
 		<<" :|: "<<this->hull_buoyancy
 		<<" :|: "<<this->a_hull_type
 		<<" :|: "<<this->lift
-		<<" :|: "<<this->is_leased
+		<<" :|: "<<this->leased_to
 		<<endl;
 		
 		string str = ss.str();
@@ -219,7 +215,8 @@ public:
 			if(veh->is_leased != 0){
 				cout<<"Can't lease vechicle!"<<endl;
 			}else{
-			veh->is_leased = p_id;
+			veh->leased_to = p_id;
+			veh->is_leased = 1;
 			}
 		}
 		
@@ -228,6 +225,7 @@ public:
 	static void return_leasing(int v_id){
 		Vehicle* veh = v_get_by_id(v_id);
 		veh->is_leased = 0;
+		veh->leased_to = 0;
 	}
 
 	static Vehicle* v_get_by_id(int id){
@@ -301,6 +299,9 @@ int main(){
 	
 	while(1){
 		
+		vector<Vehicle*> vv = Vehicle::get_object_vector();
+		vector<Person*> vp = Person::get_object_vector();
+		
 		system("cls");
 		
 		cout
@@ -353,7 +354,9 @@ int main(){
 						cin>>mdl_L;
 						
 						cout<<"Input Producer:"<<endl;
-						cin>>prod_L;
+						//cin>>prod_L;
+						cin.ignore();
+						getline(cin,prod_L);
 						
 						cout<<"Input Production year:"<<endl;
 						cin>>p_year_L;
@@ -380,6 +383,7 @@ int main(){
 						cout<<"Adding Land Based Vehicle"<<endl;
 						
 						new Land(mdl_L, prod_L, p_year_L, n_pass_L, f_typ_L, f_cap_L, wght_L, drs_L, t_cap_L);
+						system("pause");
 					}
 					break;
 					
@@ -395,7 +399,9 @@ int main(){
 						cin>>mdl_W;
 						
 						cout<<"Input Producer:"<<endl;
-						cin>>prod_W;
+						//cin>>prod_W;
+						cin.ignore();
+						getline(cin,prod_W);
 						
 						cout<<"Input Production year:"<<endl;
 						cin>>p_year_W;
@@ -422,6 +428,7 @@ int main(){
 						cout<<"Adding Water Based Vehicle"<<endl;
 						
 						new Water(mdl_W, prod_W, p_year_W, n_pass_W, f_typ_W, f_cap_W, wght_W, w_typ_W, buoy_W);
+						system("pause");
 					}
 					break;
 					
@@ -437,7 +444,9 @@ int main(){
 						cin>>mdl_A;
 						
 						cout<<"Input Producer:"<<endl;
-						cin>>prod_A;
+						//cin>>prod_A;
+						cin.ignore();
+						getline(cin,prod_A);
 						
 						cout<<"Input Production year:"<<endl;
 						cin>>p_year_A;
@@ -464,6 +473,7 @@ int main(){
 						cout<<"Adding Air Based Vehicle"<<endl;
 						
 						new Air(mdl_A, prod_A, p_year_A, n_pass_A, f_typ_A, f_cap_A, wght_A, a_typ_A, lft_A);
+						system("pause");
 					}
 					break;
 				}	
@@ -489,6 +499,7 @@ int main(){
 					cout<<"Adding New Employee"<<endl;
 					
 					new Employee(nm_E, snm_E, ag_E, pos_E);
+					system("pause");
 				}
 			break;
 			
@@ -509,6 +520,7 @@ int main(){
 					cout<<"Adding New Customer"<<endl;
 					
 					new Customer(nm_C, snm_C, ag_C);
+					system("pause");
 				}
 			break;
 			
@@ -521,25 +533,40 @@ int main(){
 					
 				cout<<"Which Vehicle Are You Renting?"<<endl;
 				
-				/*
-				A FULL LIST OF VEHICLES
-				*/
+				//A FULL LIST OF VEHICLES
+			
+					cout<<"Printing Vehicle list:"<<endl
+					<<"In Format: ID :|: Model :|: Producer :|: Production Year :|: Number of Passengers :|: Fuel Type :|: Fuel Capacity :|: Weight :|: Type :|: Doors :|: Trunk Capacity :|: Water Hull :|: Buoyancy :|: Air Hull :|: Lift :|: Leased to"<<endl;
+					
+					for(Vehicle* i : vv){
+						if(i->is_leased == 0){
+						cout<<i->to_string()<<endl;
+						}
+					}
 				
 				cout<<"Select by ID:"<<endl;
 				cin>>r_v_id;
 				
 				cout<<"To Whom is the Vehicle Rented?"<<endl;
 				
-				/*
-				A FULL LIST OF CUSTOMERS
-				*/
+				//A FULL LIST OF CUSTOMERS
 				
+				cout<<"Printing Customer List:"<<endl
+					<<"In Format: ID :|: Name :|: Surname :|: Age :|: Position"<<endl;
+					
+					for(Person* j : vp){
+						if(j->position == "Customer"){	
+						cout<<j->to_string()<<endl;
+						}
+					}
+
 				cout<<"Select by ID:"<<endl;
 				cin>>r_p_id;
 				
 				cout<<"Vehicle rented"<<endl;
 				Vehicle::leasing(r_v_id, r_p_id);
-				}
+				system("pause");
+			}
 			break;
 			
 			case 5://RETURN VEHICLE
@@ -548,15 +575,20 @@ int main(){
 				
 				cout<<"Which Vehicle to return?"<<endl;
 				
-				/*
-				ALL RENTED VEHICLES
-				*/
+				//ALL RENTED VEHICLES
+				
+				for(Vehicle* i : vv){
+					if(i->is_leased != 0){	
+						cout<<i->to_string()<<endl;
+					}
+					}
 				
 				cout<<"Choose by ID:"<<endl;
 				cin>>r_v_id;
 				
 				cout<<"Returning Vehicle"<<endl;
 				Vehicle::return_leasing(r_v_id);
+				system("pause");
 			}
 			break;
 			
@@ -570,11 +602,18 @@ int main(){
 					LIST OF ALL EMPLOYEES
 					*/
 					
+					for(Person* j : vp){
+						if(j->position != "Customer"){
+						cout<<j->to_string()<<endl;
+						}
+					}
+					
 					cout<<"Choose by ID:"<<endl;
 					cin>>d_p_id;
 					
-					cout<<"Removing Employee";
+					cout<<"Removing Employee"<<endl;
 					Person::del_p_from_vector(d_p_id);
+					system("pause");
 				}
 			break;
 			
@@ -583,77 +622,45 @@ int main(){
 					int d_v_id;
 					cout<<"Which Vehicle do You Want to Remove from the Roster"<<endl;
 					
-					/*
-					LIST ALL NON RENTED VEHICLES
-					*/
+					
+					for(Vehicle* i : vv){
+						if(i->is_leased == 0) cout<<i->to_string()<<endl;
+					}
 					
 					cout<<"Choose by ID:"<<endl;
 					cin>>d_v_id;
 					
 					cout<<"Removing Vehicle"<<endl;
 					Vehicle::del_v_from_vector(d_v_id);
+					system("pause");
 				}
 			break;
 			
-			case 8:
-				
+			case 8://PERSONEL AND CUSTOMER LIST
+				{
+					cout<<"Printing Personel and Customer List:"<<endl
+					<<"In Format: ID :|: Name :|: Surname :|: Age :|: Position"<<endl;
+					
+					for(Person* j : vp){
+						cout<<j->to_string()<<endl;
+					}
+					system("pause");
+				}
 			break;
 			
-			case 9:
-				
+			case 9://VEHICLE LIST
+				{
+					cout<<"Printing Vehicle list:"<<endl
+					<<"In Format: ID :|: Model :|: Producer :|: Production Year :|: Number of Passengers :|: Fuel Type :|: Fuel Capacity :|: Weight :|: Type :|: Doors :|: Trunk Capacity :|: Water Hull :|: Buoyancy :|: Air Hull :|: Lift :|: Leased to"<<endl;
+					
+					for(Vehicle* i : vv){
+						cout<<i->to_string()<<endl;
+					}
+					system("pause");
+				}
 			break;
 		}
 	}
 	return EXIT_SUCCESS;
 }
 
-	
-	/*
-	
-	asd
-	
-	vector<Vehicle*> a = Vehicle::get_object_vector();
-		for(Vehicle* i : a){
-			cout<<i->to_string()<<endl;
-		}
-	
-	cout<<endl<<endl;
-	
-	vector<Person*> b = Person::get_object_vector();
-		for(Person* j : b){
-			cout<<j->to_string()<<endl;
-		}
-	*/
-	
-	/*
-	Vehicle::del_from_vector(3);
-	vector<Vehicle*> a = Vehicle::get_object_vector();
-		for(Vehicle* i : a){
-			cout<<i->to_string()<<endl;
-		}
-	vector<Person*> b = Person::get_object_vector();
-		for(Person* j : b){
-			cout<<j->to_string()<<endl;
-		}
-	Vehicle::leasing(2,2);
-	a = Vehicle::get_object_vector();
-		for(Vehicle* i : a){
-			cout<<i->to_string()<<endl;
-		}
-	Vehicle::leasing(2,2);
-	Vehicle::return_leasing(2);
-	Vehicle::leasing(2,1);
-	a = Vehicle::get_object_vector();
-		for(Vehicle* i : a){
-			cout<<i->to_string()<<endl;
-		}
-	b = Person::get_object_vector();
-		for(Person* j : b){
-			cout<<j->to_string()<<endl;
-		}
-	Person::del_from_vector(2);
-		b = Person::get_object_vector();
-		for(Person* j : b){
-			cout<<j->to_string()<<endl;
-		}
-	*/
