@@ -1,2 +1,2 @@
-# GD_repo
-The general dump of ideas and quick edits
+# Microshell in C
+Uni project - Microshell writen i C for linux
